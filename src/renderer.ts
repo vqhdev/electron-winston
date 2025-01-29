@@ -2,7 +2,7 @@ import type { API } from './types'
 
 class Logger {
   private api: API
-  private channel: string
+  private readonly channel: string
 
   constructor(name: string = 'log') {
     this.channel = `__electron_winston_${name}_handler__`
@@ -12,20 +12,23 @@ class Logger {
       (globalThis || window).electron
   }
 
-  info(message: any): void {
-    this.api.ipcRenderer.send(this.channel, 'info', message)
+  info(message: any, ...meta: unknown[]): void {
+    this.api.ipcRenderer.send(this.channel, 'info', message, ...meta)
   }
 
-  error(message: any): void {
+  error(message: any, ...meta: unknown[]): void {
     if (message instanceof Error) {
-      this.api.ipcRenderer.send(this.channel, 'error', `${message.stack}`)
-    } else {
-      this.api.ipcRenderer.send(this.channel, 'error', message)
+      message = `${message.stack}`
     }
+    this.api.ipcRenderer.send(this.channel, 'error', message, ...meta)
   }
 
-  warn(message: any): void {
-    this.api.ipcRenderer.send(this.channel, 'warn', message)
+  warn(message: any, ...meta: unknown[]): void {
+    this.api.ipcRenderer.send(this.channel, 'warn', message, ...meta)
+  }
+
+  debug(message: any, ...meta: unknown[]): void {
+    this.api.ipcRenderer.send(this.channel, 'debug', message, ...meta)
   }
 }
 

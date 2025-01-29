@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Logger UI</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      opacity: 0.8;
+    }
+    .btn#info { background: #3498db; color: white; }
+    .btn#error { background: #e74c3c; color: white; }
+    .btn#warn { background: #f1c40f; color: black; }
+    .btn#debug { background: #2ecc71; color: white; }
+    .btn#addMoreMeta { background: #95a5a6; color: white; }
+    .metadata-container {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .metadata-container div {
+      display: flex;
+      gap: 5px;
+    }
+    input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <input placeholder="Message..." id="message">
+  <div class="metadata-container" id="metadataContainer">
+    <div>
+      <input placeholder="Metadata..." class="metadata">
+      <button class="btn" id="addMoreMeta">+</button>
+    </div>
+  </div>
+  <div>
+    <button class="btn" id="info">Info</button>
+    <button class="btn" id="error">Error</button>
+    <button class="btn" id="warn">Warn</button>
+    <button class="btn" id="debug">Debug</button>
+  </div>
+</div>
+
+<script type="module">
+  import logger from '../dist/renderer.mjs';
+  const message = document.getElementById('message');
+  const metadataContainer = document.getElementById('metadataContainer');
+  const addMoreMeta = document.getElementById('addMoreMeta');
+  const buttons = ['info', 'error', 'warn', 'debug'];
+
+  addMoreMeta.addEventListener('click', () => {
+    const div = document.createElement('div');
+    const input = document.createElement('input');
+    input.placeholder = "Metadata...";
+    input.classList.add('metadata');
+    div.appendChild(input);
+    metadataContainer.appendChild(div);
+  });
+
+  buttons.forEach(id => {
+    document.getElementById(id).addEventListener('click', () => {
+      const metadataValues = Array.from(document.querySelectorAll('.metadata'))
+        .map(input => input.value)
+        .filter(value => value.trim() !== '');
+      logger[id](message.value, ...metadataValues);
+    });
+  });
+</script>
+</body>
+</html>
