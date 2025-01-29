@@ -4,7 +4,8 @@ import { session as _session } from 'electron'
 import { type Session } from 'electron'
 
 export * from './logger'
-
+import * as winston from 'winston'
+export { winston }
 type Options = {
   /**
    * Attach ES module preload script.

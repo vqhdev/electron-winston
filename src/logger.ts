@@ -3,12 +3,7 @@ import winston, { format, createLogger } from 'winston'
 import { app, ipcMain } from 'electron'
 
 import type { Logger as WinstonLogger } from 'winston'
-import { LoggerDefaultTransport } from './types'
-
-export type LoggerOptions = {
-  defaultTransport?: LoggerDefaultTransport | false
-  winstonOptions?: winston.LoggerOptions
-}
+import { LoggerOptions } from './types'
 export class Logger {
   private readonly logger: WinstonLogger
   private renderLogger?: WinstonLogger
@@ -96,6 +91,10 @@ export class Logger {
         )
       }
     }
+  }
+
+  get winstonLogger(): WinstonLogger {
+    return this.logger
   }
 
   /**
