@@ -60,6 +60,7 @@
     "electron"
   ],
   "scripts": {
+    "prepare": "npm run build",
     "format": "prettier --write .",
     "lint": "eslint --ext .js,.cjs,.mjs,.ts,.cts,.mts src/**",
     "typecheck": "tsc --noEmit",
